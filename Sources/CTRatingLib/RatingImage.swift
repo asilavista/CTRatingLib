@@ -22,11 +22,11 @@ public enum RatingImage: String {
     case football
     
     public func image(fill:Bool) -> Image {
-        var name = rawValue
+        var name = rawValue + (fill ? ".fill" : "")
         let sfSymbol = "SF_"
         let isSfSymbol = rawValue.hasPrefix(sfSymbol)
         if isSfSymbol {
-            name = name.replacingOccurrences(of: sfSymbol, with: "") + (fill ? ".fill" : "")
+            name = name.replacingOccurrences(of: sfSymbol, with: "")
         }
         return isSfSymbol ? Image(systemName: name) : Image(name, bundle: .module)
     }
