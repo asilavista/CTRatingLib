@@ -28,6 +28,6 @@ public enum RatingImage: String {
         if isSfSymbol {
             name = name.replacingOccurrences(of: sfSymbol, with: "") + (fill ? ".fill" : "")
         }
-        return isSfSymbol ? Image(systemName: name) : Image(name)
+        return isSfSymbol ? Image(systemName: name) : Image(name, bundle: .module)
     }
 }
