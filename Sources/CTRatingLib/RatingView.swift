@@ -11,6 +11,7 @@ public struct RatingView: View {
     
     var maxRating:Int
     @Binding var currentRating:Int
+    var animation:Animation?
     var width:CGFloat
     var color:Color
     var ratingImage:RatingImage
@@ -22,12 +23,13 @@ public struct RatingView: View {
     ///   - color: The color of the image ( (Default - system Yellow)
     ///   - An enum representing the image used for the rating (Default - star)
     ///  Only two required parameters are maxRating and the binding to currentRating. All other parameters have default
-    public init(maxRating: Int, currentRating: Binding<Int>, width: CGFloat = 20, color: Color = .yellow, ratingImage: RatingImage = .star) {
+    public init(maxRating: Int, currentRating: Binding<Int>, width: CGFloat = 20, color: Color = .yellow, ratingImage: RatingImage = .star, animation:Animation?) {
         self.maxRating = maxRating
         _currentRating = currentRating
         self.width = width
         self.color = color
         self.ratingImage = ratingImage
+        self.animation = animation
     }
     
     public var body: some View {
@@ -38,6 +40,9 @@ public struct RatingView: View {
                     .scaledToFit()
                     .foregroundColor(color)
                     .frame(width: width)
+                    .ifNotNil(animation) { view, animation in
+                        view.animation(animation, value: currentRating)
+                    }
                     .onTapGesture {
                         currentRating = rating
                     }
@@ -50,7 +55,17 @@ public struct RatingView: View {
     }
 }
 
+extension View {
+    @ViewBuilder func ifNotNil<Content:View, Item:Any>(_ item:Item?, content:(Self, Item) -> (Content)) -> some View {
+        if let item {
+            content(self, item)
+        } else {
+            self
+        }
+    }
+}
+
 #Preview("RatingView Preview") {
     @Previewable @State var currentRating = 3
-    RatingView(maxRating: 5, currentRating: $currentRating, width: 28)
+    RatingView(maxRating: 5, currentRating: $currentRating, width: 28, animation: .easeInOut)
 }
